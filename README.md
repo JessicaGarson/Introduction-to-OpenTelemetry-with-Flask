@@ -62,7 +62,7 @@ opentelemetry-instrument --logs_exporter otlp flask run -p 8080
 ```
 
 ### Elastic APM bridge
-Another way to see telemetry data from your application in Elastic is to use the Elastic APM bridge. An example can be seen in `[elastic.py](elastic.py)`.
+Another way to see telemetry data from your application in Elastic is to use the Elastic APM bridge. An example can be seen in [`elastic.py`](elastic.py).
 
 You can run this code by the following command:
 
