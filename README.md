@@ -58,7 +58,7 @@ Followed by:
 
 ```bash
 export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
-opentelemetry-instrument --logs_exporter otlp flask run -p 8080
+opentelemetry-instrument --service_name otel-collector --logs_exporter otlp flask run -p 8080
 ```
 
 ### Elastic APM bridge
