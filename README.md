@@ -7,7 +7,8 @@ You can find slides to accompany this talk in the folder of this repository enti
 ## Code
 The demo application being shown is a very simple to-do list application.
 
-- [`app.py`](app.py) is a simple Flask application that can run locally by using the following command: 
+## Automatic instrumentation
+[`app.py`](app.py) is a simple Flask application that can run locally by using the following command: 
 
 ```bash
 python app.py
@@ -32,9 +33,11 @@ opentelemetry-instrument \
     flask run -p 8080
 ```
 
-- [`logging.py`](logging.py), [`traces.py`](traces.py), and [`metrics.py`](metrics.py) are demo how you would manually instrument your application. 
+### Manual instrumentation 
+[`logging.py`](logging.py), [`traces.py`](traces.py), and [`metrics.py`](metrics.py) are demo how you would manually instrument your application. 
 
-- You can export your telemetry data to a collector by setting up a [yaml file like this one](tmp/otel-collector-config.yaml) and see it in Elastic. 
+### Sending your data to a collector 
+You can export your telemetry data to a collector by setting up a [yaml file like this one](tmp/otel-collector-config.yaml) and see it in Elastic. 
 
 You can run this in your terminal:
 
@@ -58,7 +61,8 @@ export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
 opentelemetry-instrument --logs_exporter otlp flask run -p 8080
 ```
 
-- Another way to see telemetry data from your application in Elastic is to use the Elastic APM bridge. An example can be seen in `[elastic.py](elastic.py)`.
+### Elastic APM bridge
+Another way to see telemetry data from your application in Elastic is to use the Elastic APM bridge. An example can be seen in `[elastic.py](elastic.py)`.
 
 You can run this code by the following command:
 
