@@ -7,7 +7,7 @@ You can find slides to accompany this talk in the folder of this repository enti
 ## Code
 The demo application being shown is a very simple to-do list application.
 
-## Automatic instrumentation
+### Automatic instrumentation
 [`app.py`](app.py) is a simple Flask application that can run locally by using the following command: 
 
 ```bash
