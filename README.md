@@ -5,7 +5,66 @@ OpenTelemetry (OTel) is an open-source, vendor-neutral observability framework d
 You can find slides to accompany this talk in the folder of this repository entitled [slides](https://github.com/JessicaGarson/Introduction-to-OpenTelemetry-with-Flask/tree/main/slides).
 
 ## Code
+The demo application being shown is a very simple to-do list application.
 
+- [`app.py`](app.py) is a simple Flask application that can run locally by using the following command: 
+
+```bash
+python app.py
+```
+
+To use automatic instrumentation for this application, you can run this as follows:
+
+```bash
+pip install opentelemetry-distro
+opentelemetry-bootstrap -a install
+```
+
+Followed by: 
+
+```bash
+export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+opentelemetry-instrument \
+    --traces_exporter console \
+    --metrics_exporter console \
+    --logs_exporter console \
+    --service_name todo \
+    flask run -p 8080
+```
+
+- [`logging.py`](logging.py), [`traces.py`](traces.py), and [`metrics.py`](metrics.py) are demo how you would manually instrument your application. 
+
+- You can export your telemetry data to a collector by setting up a [yaml file like this one](tmp/otel-collector-config.yaml) and see it in Elastic. 
+
+You can run this in your terminal:
+
+```bash
+docker run -p 4317:4317 \
+  -v $(pwd)/tmp/otel-collector-config.yaml:/etc/otel-collector-config.yaml \
+  otel/opentelemetry-collector:latest \
+  --config=/etc/otel-collector-config.yaml
+```
+
+In a different terminal window, you will want to run the following:
+
+```bash
+pip install opentelemetry-exporter-otlp
+```
+
+Followed by:
+
+```
+export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+opentelemetry-instrument --logs_exporter otlp flask run -p 8080
+```
+
+- Another way to see telemetry data from your application in Elastic is to use the Elastic APM bridge. An example can be seen in `[elastic.py](elastic.py)`.
+
+You can run this code by the following command:
+
+```
+python elastic.py
+```
 
 ## Resources
 - [OpenTelemetry docs](https://opentelemetry.io/)
