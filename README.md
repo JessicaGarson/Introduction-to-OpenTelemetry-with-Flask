@@ -1,9 +1,11 @@
 # Introduction to OpenTelemetry with Flask
-OpenTelemetry (OTel) is an open-source, vendor-neutral observability framework designed to work with any backend system. It provides standardized APIs, libraries, and tools to collect telemetry data, such as metrics, logs, and traces. This repository contains the code and resources accompanying a talk given at FlaskCon 2024.
+OpenTelemetry (OTel) is an open-source, vendor-neutral observability framework designed to work with any backend system. It provides standardized APIs, libraries, and tools to collect telemetry data, such as metrics, logs, and traces.
 
 ## Slides
+You can find slides to accompany this talk in the folder of this repository entitled [slides](https://github.com/JessicaGarson/Introduction-to-OpenTelemetry-with-Flask/tree/main/slides).
 
 ## Code
+
 
 ## Resources
 - [OpenTelemetry docs](https://opentelemetry.io/)
