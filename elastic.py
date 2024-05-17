@@ -3,34 +3,36 @@ from flask_sqlalchemy import SQLAlchemy
 from elasticapm.contrib.flask import ElasticAPM
 from elasticapm.contrib.opentelemetry import Tracer
 import os
-
+from sqlalchemy.orm import Mapped, mapped_column
 
 # Initialize Flask app and database configuration
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
 # Elastic APM configuration
 app.config['ELASTIC_APM'] = {
-  'SERVICE_NAME': 'todo',
-  'SECRET_TOKEN': os.environ.get('ELASTIC_APM_SECRET_TOKEN'),
-  'SERVER_URL': os.environ.get('ELASTIC_APM_SERVER_ENDPOINT'),
-  'ENVIRONMENT': 'my-environment',
-  'DEBUG': True,
+    'SERVICE_NAME': 'todo',
+    'SECRET_TOKEN': os.environ.get('ELASTIC_APM_SECRET_TOKEN'),
+    'SERVER_URL': os.environ.get('ELASTIC_APM_SERVER_ENDPOINT'),
+    'ENVIRONMENT': 'my-environment',
+    'DEBUG': True,
 }
 
 # Initialize Elastic APM monitoring and SQLAlchemy ORM
 apm = ElasticAPM(app)
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 # Initialize the OpenTelemetry Tracer
 tracer = Tracer(__name__)
 
 # Define the Task model
 class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(256), nullable=False)
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    description: Mapped[str] = mapped_column(db.String(256), nullable=False)
+
+# Initialize SQLAlchemy with the configured Flask application
+db.init_app(app)
 
 # Create the tasks database table if not already created
 with app.app_context():
@@ -127,16 +129,19 @@ def add():
         db.session.commit()
     return redirect(url_for('home'))
 
-
 # Route to delete an existing task
 @app.route('/delete/<int:task_id>', methods=['GET'])
-def delete(task_id):
+def delete(task_id: int):
     with tracer.start_as_current_span("deleting_task"):
-            task_to_delete = Task.query.get(task_id)
-            if task_to_delete:
-                db.session.delete(task_to_delete)
-                db.session.commit()
-            return redirect(url_for('home'))
+        task_to_delete = Task.query.get(task_id)
+        if task_to_delete:
+            db.session.delete(task_to_delete)
+            db.session.commit()
+    return redirect(url_for('home'))
+
+# Start the Flask application
+if __name__ == '__main__':
+    app.run()
 
 
 # Start the Flask application
