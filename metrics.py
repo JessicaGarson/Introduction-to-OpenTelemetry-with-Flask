@@ -2,12 +2,13 @@ from flask import Flask, request, render_template_string, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from opentelemetry import trace
 from opentelemetry import metrics
+from sqlalchemy.orm import Mapped, mapped_column
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 tracer = trace.get_tracer("task.tracer")
 meter = metrics.get_meter("task.meter")
@@ -23,8 +24,11 @@ task_counter = meter.create_counter(
 )
 
 class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(256), nullable=False)
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    description: Mapped[str] = mapped_column(db.String(256), nullable=False)
+
+# Initialize SQLAlchemy with the configured Flask application
+db.init_app(app)
 
 with app.app_context():
     db.create_all()
@@ -122,14 +126,14 @@ def add():
     return redirect(url_for('home'))
 
 @app.route('/delete/<int:task_id>', methods=['GET'])
-def delete(task_id):
+def delete(task_id: int):
     with tracer.start_as_current_span("deleting_task"):
         task_to_delete = Task.query.get(task_id)
         if task_to_delete:
             db.session.delete(task_to_delete)
             db.session.commit()
         request_counter.add(1, {"endpoint": "delete"})
-        return redirect(url_for('home'))
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)
