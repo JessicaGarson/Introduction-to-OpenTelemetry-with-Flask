@@ -11,7 +11,7 @@ The demo application being shown is a very simple to-do list application.
 [`app.py`](app.py) is a simple Flask application that can run locally by using the following command: 
 
 ```bash
-python app.py
+flask run -p 8080
 ```
 
 To use automatic instrumentation for this application, you can run this as follows:
@@ -68,12 +68,6 @@ First, you can install the Elastic APM bridge:
 
 ```
 pip install elastic-apm[opentelemetry]
-```
-
-You can run this example code by the using following command:
-
-```
-python elastic.py
 ```
 
 ## Resources
