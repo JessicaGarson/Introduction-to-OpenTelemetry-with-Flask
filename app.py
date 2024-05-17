@@ -10,7 +10,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tasks.db"
 # Initialize SQLAlchemy with the configured Flask application
 db = SQLAlchemy(app)
 
-
 # Define a database model named Task for storing task data
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # ID column as primary key
