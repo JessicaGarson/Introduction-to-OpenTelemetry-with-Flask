@@ -1,22 +1,18 @@
-# Import necessary modules from Flask and SQLAlchemy for web app and database interaction
 from flask import Flask, request, render_template_string, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import Mapped, mapped_column
 
-# Create an instance of Flask class for our web application
 app = Flask(__name__)
-# Configuration for the SQLAlchemy database URI using SQLite
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tasks.db"
-
-# Initialize SQLAlchemy with the configured Flask application
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 # Define a database model named Task for storing task data
 class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)  # ID column as primary key
-    description = db.Column(
-        db.String(256), nullable=False
-    )  # Description column for task details
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    description: Mapped[str] = mapped_column(db.String(256), nullable=False)
 
+# Initialize SQLAlchemy with the configured Flask application
+db.init_app(app)
 
 # Initialize the database within the application context
 with app.app_context():
@@ -96,7 +92,6 @@ HOME_HTML = """
 </html>
 """
 
-
 # Define route for the home page to display tasks
 @app.route("/", methods=["GET"])
 def home():
@@ -104,7 +99,6 @@ def home():
     return render_template_string(
         HOME_HTML, tasks=tasks
     )  # Render the homepage with tasks listed
-
 
 # Define route to add new tasks from the form submission
 @app.route("/add", methods=["POST"])
@@ -115,16 +109,14 @@ def add():
     db.session.commit()  # Commit changes to the database
     return redirect(url_for("home"))  # Redirect to the home page
 
-
 # Define route to delete tasks based on task ID
 @app.route("/delete/<int:task_id>", methods=["GET"])
-def delete(task_id):
+def delete(task_id: int):
     task_to_delete = Task.query.get(task_id)  # Get task by ID
     if task_to_delete:
         db.session.delete(task_to_delete)  # Remove task from the database session
         db.session.commit()  # Commit the change to the database
     return redirect(url_for("home"))  # Redirect to the home page
-
 
 # Check if the script is the main program and run the app
 if __name__ == "__main__":
