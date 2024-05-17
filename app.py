@@ -6,8 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 # Configuration for the SQLAlchemy database URI using SQLite
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tasks.db"
-# Disable modification tracking for performance benefits
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Initialize SQLAlchemy with the configured Flask application
 db = SQLAlchemy(app)
