@@ -11,7 +11,7 @@ The demo application being shown is a very simple to-do list application.
 [`app.py`](app.py) is a simple Flask application that can run locally by using the following command: 
 
 ```bash
-flask run -p 8080
+flask run -p 5000
 ```
 
 To use automatic instrumentation for this application, you can run this as follows:
@@ -30,7 +30,7 @@ opentelemetry-instrument \
     --metrics_exporter console \
     --logs_exporter console \
     --service_name todo \
-    flask run -p 8080
+    flask run -p 5000
 ```
 
 ### Manual instrumentation 
